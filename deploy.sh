@@ -3,20 +3,22 @@
 # 确保脚本抛出遇到的错误
 set -e
 
+
+push_addr=git@github.com:traveller40/traveller40.github.io.git # git提交地址，也可以手动设置，比如：push_addr=git@github.com:xugaoyi/vuepress-theme-vdoing.git
+commit_info=`git describe --all --always --long`
+dist_path=docs/.vuepress/dist # 打包生成的文件夹路径
+push_branch=main # 推送的分支
+
 # 生成静态文件
 npm run build
 
 # 进入生成的文件夹
-cd docs/.vuepress/dist
+cd $dist_path
 
 git init
 git add -A
-git commit -m 'deploy'
-
-# 如果你想要部署到 https://<USERNAME>.github.io
-git push -f git@github.com:traveller40/traveller40.github.io.git master
-
-# 如果发布到 https://<USERNAME>.github.io/<REPO>  REPO=github上的项目
-# git push -f git@github.com:<USERNAME>/vuepress.git master:gh-pages
+git commit -m "deploy, $commit_info"
+git push -f $push_addr HEAD:$push_branch
 
 cd -
+rm -rf $dist_path
